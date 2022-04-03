@@ -17,10 +17,10 @@
         <h1>Welcome to <%=userData.name%>'s Tasklist</h1>
         <figure class="text-center">
             <blockquote class="blockquote">
-              <p>A well-known quote, contained in a blockquote element.</p>
+              <p>The trouble is you think you have time!</p>
             </blockquote>
             <figcaption class="blockquote-footer">
-              Someone famous in <cite title="Source Title">Source Title</cite>
+              <cite title="Source Title">Buddha</cite>
             </figcaption>
           </figure>
           <a href="/"><button class="btn btn-primary" id="butn">LogOut</button></a>
@@ -31,14 +31,21 @@
               </div>
              </form>
              <div id="taskList">
-                  <ul class="list-group">
                     <% userData.tasks.forEach(function(elms,i){%>
-                      <li class="list-group-item d-flex justify-content-between"><%=elms.taskName%> <span><a href="/showTask/<%=userData._id%>/<%=elms.taskName%>" class="btn btn-outline-primary btn-sm m-1"><i class="ri-share-box-line"></i></a><a href="/deleteTask/<%=userData._id%>/<%=elms.taskName%>" class="btn btn-outline-danger btn-sm m-1"><i class="ri-delete-bin-line"></i></a></span></li>
+
+                      <form action="/done/<%=i%>">
+                        <li class="list-group-item d-flex justify-content-between"><div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                        <label class="form-check-label" for="flexCheckDefault">
+                          <%=elms.taskName%> 
+                        </label>
+                      </div><span><a href="/deleteTask/<%=userData._id%>/<%=elms.taskName%>" class="btn btn-outline-danger btn-sm m-1"><i class="ri-delete-bin-line"></i></a></span></li>
+                      </form>
+                      
 
 
                       <%})%>
         
-              </ul>
              </div>
          
          
@@ -47,6 +54,7 @@
          
 
     </main>
-    
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
 </body>
 </html>

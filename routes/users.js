@@ -1,7 +1,10 @@
 const mongoose=require('mongoose');
 mongoose.connect("mongodb://localhost/taskList")
 const userSchema=mongoose.Schema({
-  name:String,
+  name:{
+    type:String,
+    unique:true
+  },
   password:String,
   tasks:Array
 })

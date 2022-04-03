@@ -24,7 +24,10 @@ router.post('/taskApp',function(req,res){
     name:req.body.user
   }).then(function(data){
     if(data.password===req.body.pass){
-      res.render("taskApp",{userData:data})
+      // res.send(data)
+      // res.render("taskApp",{userData:data})
+    res.redirect(`/taskApp/${data._id}`)
+
     }
     else{
       res.send("invalid User!")
@@ -55,7 +58,6 @@ router.get("/taskApp/:id",function(req,res){
 
   })
 })
-//refresh karne pr previous data bar bar update ho raha hai
 router.get("/deleteTask/:id/:t",function(req,res){
   userData.findOneAndUpdate({
     _id:req.params.id
@@ -63,9 +65,9 @@ router.get("/deleteTask/:id/:t",function(req,res){
     res.redirect(`/taskApp/${req.params.id}`)
   })
 })
-router.get('/showTask/:id/:task',function(req,res){
-res.send(req.params.task)
-})
+
+
+
 
 
 
