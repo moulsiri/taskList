@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="../stylesheets/style.css">
+
+
+
+</head>
+
+<body>
+    <main>
+        <h1>Welcome to <%=data.name%>'s Tasklist</h1>
+        <figure class="text-center">
+            <blockquote class="blockquote">
+                <p>The trouble is you think you have time!</p>
+            </blockquote>
+            <figcaption class="blockquote-footer">
+                <cite title="Source Title">Buddha</cite>
+            </figcaption>
+        </figure>
+        <a href="/logout"><button class="btn btn-primary" id="butn">LogOut</button></a>
+        <div id="task" class="container">
+            <form action="/createTask">
+                <div class="input-group mt-5">
+                    <input type="text" name="task" class="form-control" placeholder="Enter New Task"
+                        aria-describedby="basic-addon1">
+                </div>
+            </form>
+            <div id="taskList">
+                <%if(data.tasks.length!=0){%>
+
+                    <% data.tasks.forEach(function(elms,i){%>
+
+
+                        <li class="list-group-item d-flex justify-content-between">
+                            <p class="<%= elms.done === true ? 'cut' : '' %>">
+                                <%=elms.taskName%>
+                            </p>
+
+                            <span><a href="/deleteTask/<%=elms.taskName%>" class="btn btn-outline-danger btn-sm m-1"><i
+                                        class="ri-delete-bin-line"></i></a>
+                                <a href="/showTask/<%=i%>" class="btn btn-outline-primary btn-sm m-1"><i
+                                        class="ri-share-circle-line"></i></a></span>
+                        </li>
+                        </form>
+
+
+
+                        <%})%>
+
+
+                            <%}else{%>
+                                <h1 class="lightColor position-absolute top-50 start-50 translate-middle">no tasks added
+                                </h1>
+
+
+
+
+                                <%}%>
+
+
+            </div>
+
+
+
+        </div>
+
+
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
+        integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
+        integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
