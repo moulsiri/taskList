@@ -13,7 +13,7 @@ main{
   border:1px solid transparent;
 }
 .box{
-  height:50vh;
+  min-height:50vh;
   width:50vw;
   box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.247);
   position:absolute;
@@ -44,6 +44,13 @@ main>h1{
 }
 #butn{
   position: absolute;
-  right:21%;
-  top:26%;
+  left: 50%;
+  top:5%;
+  transform: translate(-50%,-50%);
+}
+.cut{
+  text-decoration: line-through;
+}
+.lightColor{
+  color:#24303b81;
 }

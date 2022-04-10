@@ -1,74 +1,103 @@
 var express = require('express');
-const res = require('express/lib/response');
 var router = express.Router();
-const userData=require('./users')
+const passport=require('passport');
+const local=require('passport-local')
+const db=require('./users')
+passport.use(new local(db.authenticate()));
+function isLoggedIn(req,res,next){
+  if(req.isAuthenticated()){
+    return next();
+  }
+  else{
+    res.redirect('/');
+  }
+}
 
+/* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index');
 });
-router.get('/newUser',function(req,res){
-  res.render('signUp')
+
+router.get('/signup', function(req, res, next) {
+  res.render('signUp');
+});
+
+
+router.get('/profile',isLoggedIn,function(req,res){
+ db.findOne({
+   username:req.session.passport.user
+ }).then(function(data){
+   res.render('profile',{data})
+ })
+  // res.send(req.session.passport.user);
 })
 
-router.post('/createUser',function(req,res){
-  userData.create({
-    name:req.body.n,
-    password:req.body.p
-  }).then(()=>{
-    res.redirect('/')
+router.post('/register',function(req,res){
+  let nUser=new db({
+    name:req.body.name,
+    username:req.body.username
+  })
+  db.register(nUser,req.body.password)
+  .then(function(u){
+    passport.authenticate('local')(req,res,function(){
+      res.redirect('/profile')
+    })
+  })
+  .catch(function(e){
+    res.send(e);
   })
 })
 
-router.post('/taskApp',function(req,res){
-  userData.findOne({
-    name:req.body.user
+
+router.post('/login',passport.authenticate('local',{
+  successRedirect:'/profile',
+  failureRedirect:'/'
+}),function(req,res,next){ });
+
+
+router.get('/logout',function(req,res){
+  req.logout();
+  res.redirect('/');
+module.exports = router;
+})
+
+router.get('/createTask',function(req,res){
+  db.findOneAndUpdate({
+    username:req.session.passport.user
+  },{
+    $push:{tasks:{taskName:req.query.task,
+    done:false}}
+  }).then(function(){
+    res.redirect('/profile')
+  })
+})
+
+router.get('/deleteTask/:t',function(req,res){
+  db.findOneAndUpdate({
+    username:req.session.passport.user
+  },{
+    $pull:{tasks:{taskName:req.params.t}}
+  }).then(function(){
+    res.redirect('/profile')
+  })
+})
+router.get('/showTask/:t',function(req,res){
+  db.findOne({
+    username:req.session.passport.user
   }).then(function(data){
-    if(data.password===req.body.pass){
-      // res.send(data)
-      // res.render("taskApp",{userData:data})
-    res.redirect(`/taskApp/${data._id}`)
-
-    }
-    else{
-      res.send("invalid User!")
-    }
-    
-  })
-  .catch(()=>{
-    res.send("No user found! please make your account in signUp section")
+    res.render('task',{data:data.tasks[req.params.t],id:req.params.t})
   })
 })
-
-router.get('/creatTask/:id',function(req,res){
-userData.findOneAndUpdate({
-  _id:req.params.id
-},{ $push: { tasks: {
-  taskName:req.query.task,
-  done:false
-} } }).then(function(){
-  res.redirect(`/taskApp/${req.params.id}`)
-
-})
-})
-router.get("/taskApp/:id",function(req,res){
-  userData.findOne({
-    _id:req.params.id
-  }).then(data=>{
-    res.render("taskApp",{userData:data})
-
+router.post('/updateTask/:id',function(req,res){
+  db.findOneAndUpdate({
+    username:req.session.passport.user,
+    "tasks.taskName":req.params.id
+  },{
+    $set: { "tasks.$.done" : (req.body.check)?true:false,
+           "tasks.$.taskName":req.body.taskName }
+  }).then(function(){
+    res.redirect('/profile')
   })
+ 
 })
-router.get("/deleteTask/:id/:t",function(req,res){
-  userData.findOneAndUpdate({
-    _id:req.params.id
-  },{$pull:{tasks:{taskName:req.params.t}}}).then(function(){
-    res.redirect(`/taskApp/${req.params.id}`)
-  })
-})
-
-
-
-
-
-
 module.exports = router;

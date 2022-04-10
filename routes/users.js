@@ -1,7 +1,9 @@
-const mongoose=require('mongoose');
-mongoose.connect("mongodb://localhost/taskList")
-const userSchema=mongoose.Schema({
-  name:{
+const mdb=require('mongoose');
+const plm=require('passport-local-mongoose');
+mdb.connect('mongodb://localhost/tasks');
+const schema=mdb.Schema({
+  name:String,
+  username:{
     type:String,
     unique:true
   },
@@ -9,4 +11,6 @@ const userSchema=mongoose.Schema({
   tasks:Array
 })
 
-module.exports=mongoose.model("userData",userSchema);
+
+schema.plugin(plm);
+module.exports=mdb.model('users',schema);
